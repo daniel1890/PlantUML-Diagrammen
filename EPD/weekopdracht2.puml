@@ -1,0 +1,100 @@
+@startuml weekopdracht2 EPD Seven Segment Display
+
+skinparam class {
+BackgroundColor #FAFAFA
+ArrowColor Black
+BorderColor Black
+BackgroundColor<<Foo>> DarkGrey
+}
+skinparam classAttributeIconSize 0
+skinparam backgroundcolor Gray
+skinparam stereotypeCBackgroundColor YellowGreen
+
+package Weekopdracht2Dobbelsteen {
+
+class Weekopdracht_2 {
+shiftregisterByte : byte
+setup() : void
+loop() : void
+}
+
+class States {
+LEEG_DISPLAY : const int;
+ROLLEN : const int;
+UITROLLEN : const int;
+TOON_WAARDE : const int;
+INTERVAL_ROLL : const long
+INTERVAL_DECIMAL_POINT : const long
+intervalUnroll : unsigned long
+unrollStopwatchStartWaarde : unsigned long
+unrollStopwatch : unsigned long
+timerRoll : unsigned long
+timerDecimalDot : unsigned long
+huidigeToestand : int
+unrolBezig : boolean
+input : char
+bepaalHuidigeState() : void
+}
+
+class Dice {
+diceValue : int
+diceSetup() : void
+diceGet() : int
+diceRoll() : void
+}
+
+}
+
+
+package Library #AFAFAF {
+class libTimer {
+timerSet() : unsigned long
+timerIntervalVoorbij(unsigned long interval, unsigned long timer) : boolean
+}
+
+class libPatronen {
+patronenSevenSegmentHexa : byte[]
+patronenGetSevenSegmentHexa(int index) : byte
+}
+
+class libSerial {
+serialSetup() : void
+serialRead() : char
+serialFlush() : void
+}
+
+class libShiftRegister {
+DATA_SERIAL_PIN : const int
+LATCH_CLOCK_PIN : const int
+SHIFT_CLOCK_PIN : const int
+shiftRegisterSetup() : void
+shiftRegisterSet() : void
+}
+
+class libDisplay {
+displayClear() : void
+displayNumber(int number) : void
+displayPointToggle() : void
+}
+
+class libBuzzer {
+BUZZER_PIN : const int
+nTonen : int
+tonen : int[]
+buzzerSetup() : void
+buzzerBuzz(unsigned long duratie) : void
+}
+}
+
+Weekopdracht_2 --> States
+Weekopdracht_2 --> libSerial
+States --> libBuzzer
+States --> libDisplay
+States --> Dice
+States --> libTimer
+libDisplay --> libShiftRegister
+libDisplay --> libPatronen
+
+
+
+@enduml
