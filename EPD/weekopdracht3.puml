@@ -1,0 +1,116 @@
+@startuml weekopdracht3 EPD Weerstation
+
+skinparam class {
+BackgroundColor #FAFAFA
+ArrowColor Black
+BorderColor Black
+BackgroundColor<<Foo>> DarkGrey
+}
+skinparam classAttributeIconSize 0
+skinparam backgroundcolor Gray
+skinparam stereotypeCBackgroundColor YellowGreen
+
+package Weekopdracht3Weerstation {
+
+class Weekopdracht3 {
+nMetingPerVersturing : const int
+meetIndex : int
+timerMeten : unsigned long
+timerVersturen : unsigned long
+metenInterval : unsigned long
+versturenInterval : unsigned long
+shiftRegisterByte : byte
+licht : int[]
+wind : int[]
+temp : int[]
+setup() : void
+loop() : void
+windrichtingNaarKarakter(graden : int) : char
+meetWaarden() : void
+verstuurWaarden() : void
+}
+
+}
+
+package Library #AFAFAF {
+
+class libPot {
+POT_PIN : const int
+potSetup() : void
+potGetValue() : int
+potGetValueMapped(max : long) : int
+}
+
+class libLDR {
+LDR_PIN : const int
+ldrsetup() : void
+ldrGetValue() : int
+ldrGetLux() : int
+}
+
+class libTemp {
+TEMP_PIN : const int
+tempGetValue() : float
+tempGetTemp() : float
+}
+
+class libChecksum {
+START_BYTE : const byte
+EIND_BYTE : const byte
+geefChecksum(waardes : byte, nWaardes : int) : byte
+verstuurWaardesMetChecksum(waardes : byte[], nWaardes : int) : void
+}
+
+class libHelperFunctions {
+mapFunctie(input : long, inputVan : long, inputTot: long, outputVan : long, outputTot : long) : int
+berekenGemiddelde(waardes : int[], nWaardes : int) : int
+}
+
+class libTimer {
+timerSet() : unsigned long
+timerIntervalVoorbij(unsigned long interval, unsigned long timer) : boolean
+}
+
+class libPatronen {
+patronenSevenSegmentWindrichting : byte[]
+patronenGetSevenSegmentWindrichting(karakter : char) : byte 
+}
+
+class libSerial {
+serialSetup() : void
+serialRead() : char
+serialFlush() : void
+}
+
+class libShiftRegister {
+DATA_SERIAL_PIN : const int
+LATCH_CLOCK_PIN : const int
+SHIFT_CLOCK_PIN : const int
+shiftRegisterSetup() : void
+shiftRegisterSet() : void
+shiftRegisterGet() : byte
+}
+
+class libDisplay {
+displaySetup() : void
+displayClear() : void
+displayChar(karakter : char) : void
+}
+
+}
+
+Weekopdracht3 ..> libLDR
+Weekopdracht3 ..> libPot
+Weekopdracht3 ..> libTemp
+Weekopdracht3 ..> libChecksum
+Weekopdracht3 ..> libHelperFunctions
+Weekopdracht3 ..> libTimer
+Weekopdracht3 ..> libSerial
+Weekopdracht3 ..> libDisplay
+libDisplay ..> libPatronen
+libDisplay ..> libShiftRegister
+libPot ..> libHelperFunctions
+libLDR ..> libHelperFunctions
+
+
+@enduml
